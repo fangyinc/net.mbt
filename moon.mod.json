@@ -1,0 +1,14 @@
+{
+  "name": "fangyinc/net",
+  "version": "0.1.0",
+  "deps": {
+    "fangyinc/socket": "0.1.1",
+    "tonyfettes/encoding": "0.3.6"
+  },
+  "readme": "README.md",
+  "repository": "https://github.com/fangyinc/net.mbt",
+  "license": "Apache-2.0",
+  "keywords": [],
+  "description": "",
+  "source": "src"
+}

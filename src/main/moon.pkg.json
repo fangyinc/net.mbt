@@ -1,0 +1,8 @@
+{
+  "is-main": true,
+  "import": [
+    "fangyinc/net/internal",
+    "fangyinc/net/io",
+    "fangyinc/net/tcp"
+  ]
+}

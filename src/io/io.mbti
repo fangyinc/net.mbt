@@ -1,0 +1,8 @@
+package "fangyinc/net/io"
+
+pub(all) suberror IOError String derive(Show)
+// Values
+
+// Types and methods
+
+// Traits

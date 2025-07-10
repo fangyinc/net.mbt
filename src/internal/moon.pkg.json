@@ -1,0 +1,16 @@
+{
+  "import": [
+    {
+      "path": "fangyinc/socket/lib",
+      "alias": "socket"
+    },
+    {
+      "path": "fangyinc/net/io",
+      "alias": "io"
+    }
+  ],
+  "targets": {
+      "tcp_js.mbt": ["js"],
+      "tcp_native.mbt": ["native", "llvm"]
+  }
+}
