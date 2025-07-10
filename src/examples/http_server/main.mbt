@@ -1,35 +1,35 @@
 ///|
 fn main {
   (try? run_http_server())
-  .map_err(e => println("Error running TCP server: " + e.to_string()))
+  .map_err(e => println("Error running TCP server: \{e}"))
   .unwrap()
 }
 
 ///|
 fn run_http_server() -> Unit raise @io.IOError {
-  let addr = @internal.SocketAddr::V4("127.0.0.1", 18080)
+  let addr = @io.SocketAddr::V4("127.0.0.1", 18080)
   let listener = @tcp.TcpListener::bind(addr)
   while true {
     let stream = listener.accept() catch {
       e => {
-        println("Error accepting connection: " + e.to_string())
+        println("Error accepting connection: \{e}")
         continue
       }
     }
     handle_connection(stream) catch {
-      e => println("Error handling connection: " + e.to_string())
+      e => println("Error handling connection: \{e}")
     }
-    // stream.close()
+    stream.close()
   }
   let _ = listener.close()
-  println("TCP server running on " + addr.to_string())
+  println("TCP server running on \{addr}")
 }
 
 ///|
 fn handle_connection(stream : @tcp.TcpStream) -> Unit raise @io.IOError {
   println("Accepted a connection from: ")
   let (method, path, headers, remain_lines) = parse_http(stream) catch {
-    e => raise @io.IOError("Failed to parse HTTP request: " + e.to_string())
+    e => raise @io.IOError("Failed to parse HTTP request: \{e}")
   }
   println("===================================================")
   println("Received HTTP request:")
@@ -46,7 +46,7 @@ fn handle_connection(stream : @tcp.TcpStream) -> Unit raise @io.IOError {
   let length = body.length()
   let reply =
     $|\{status_line}\r\nContent-Length: \{length}\r\n\r\n\{body}
-  println("Replying with: " + reply)
+  println("Replying with: \{reply}")
   let cstr = @io.mbt_string_to_utf8_bytes(reply)
   let reply = FixedArray::from_iter(cstr.iter())
   let _ = stream.write(reply, reply.length())

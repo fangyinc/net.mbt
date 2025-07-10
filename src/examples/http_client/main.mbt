@@ -1,30 +1,30 @@
 ///|
 fn main {
   (try? run_http_client())
-  .map_err(e => println("Error running TCP server: " + e.to_string()))
+  .map_err(e => println("Error running TCP server: \{e}"))
   .unwrap()
 }
 
 ///|
 fn run_http_client() -> Unit raise @io.IOError {
-  let addr = @internal.SocketAddr::V4("127.0.0.1", 18080)
+  let addr = @io.SocketAddr::V4("127.0.0.1", 18080)
   let client = @tcp.TcpStream::connect(addr)
   let req_line = "GET / HTTP/1.1\r\nHost: localhost\r\n\r\n"
-  println("Sending request: " + req_line)
+  println("Sending request: \{req_line}")
   let req_bytes = FixedArray::from_iter(
     @io.mbt_string_to_utf8_bytes(req_line).iter(),
   )
   let _ = client.write(req_bytes, req_bytes.length()) catch {
     e => {
       client.close()
-      raise @io.IOError("Failed to write to stream: " + e.to_string())
+      raise @io.IOError("Failed to write to stream: \{e}")
     }
   }
   println("Request sent, waiting for response...")
   let (status_code, status, headers, remain_lines) = parse_http(client) catch {
     e => {
       client.close()
-      raise @io.IOError("Failed to parse HTTP response: " + e.to_string())
+      raise @io.IOError("Failed to parse HTTP response: \{e}")
     }
   }
   println("===================================================")
@@ -38,7 +38,7 @@ fn run_http_client() -> Unit raise @io.IOError {
   }
   println("===================================================")
   client.close() catch {
-    e => println("Failed to close stream: " + e.to_string())
+    e => println("Failed to close stream: \{e}")
   }
 }
 

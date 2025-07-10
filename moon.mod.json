@@ -9,6 +9,6 @@
   "repository": "https://github.com/fangyinc/net.mbt",
   "license": "Apache-2.0",
   "keywords": [],
-  "description": "",
+  "description": "Cross-target network abstractions (TcpStream, TcpListener, UdpSocket) unifying WASM, JS, and native targets for MoonBit.",
   "source": "src"
 }
