@@ -1,5 +1,5 @@
 ///|
-typealias @io.IOError
+pub typealias @io.IOError
 
 ///|
-typealias @io.SocketAddr
+pub typealias @io.SocketAddr

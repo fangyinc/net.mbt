@@ -98,7 +98,7 @@ fn Buffer::discard_buffer(self : Buffer) -> Unit {
 }
 
 ///|
-pub fn[B : Read] BufReader::new(buf : B) -> BufReader[B] {
+pub fn[B] BufReader::new(buf : B) -> BufReader[B] {
   BufReader::{ buf: Buffer::make(1024), inner: buf }
 }
 
