@@ -1,8 +1,10 @@
+///|
 fn main {
   (try? run_http_server())
   .map_err(e => println("Error running TCP server: \{e}"))
   .unwrap()
 }
+
 ///|
 fn run_http_server() -> Unit raise @io.IOError {
   let addr = @io.SocketAddr::V4("127.0.0.1", 18080)
@@ -19,14 +21,16 @@ fn run_http_server() -> Unit raise @io.IOError {
     }
   }
   let _ = listener.close()
-}
 
+}
 
 ///|
 fn handle_connection(stream : @tcp.TcpStream) -> Unit raise @io.IOError {
   println("Accepted a connection from: ")
   let buf_reader = @io.BufReader::new(stream)
-  let lines = buf_reader.lines().iter()
+  let lines = buf_reader
+    .lines()
+    .iter()
     .map(l => l.or(""))
     .take_while(l => !l.is_empty())
     .collect()
@@ -35,8 +39,7 @@ fn handle_connection(stream : @tcp.TcpStream) -> Unit raise @io.IOError {
   for line in lines {
     println("\{line}")
   }
-  println("===================================================")  
-
+  println("===================================================")
   let status_line = "HTTP/1.1 200 OK"
   let body = "<html>\n<head>\n<title>Test Page</title>\n</head>\n<body>\n<h1>Hello, World!</h1>\n</body>\n</html>"
   let length = body.length()
@@ -46,4 +49,5 @@ fn handle_connection(stream : @tcp.TcpStream) -> Unit raise @io.IOError {
   let cstr = @io.mbt_string_to_utf8_bytes(reply)
   let reply = FixedArray::from_iter(cstr.iter())
   let _ = stream.write(reply, reply.length())
+
 }
