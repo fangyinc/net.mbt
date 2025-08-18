@@ -8,14 +8,13 @@ pub(all) struct TcpStream {
   inner : @internal.ITcpStream
 }
 
+///|
 pub(all) struct Incoming {
-  listener: TcpListener
+  listener : TcpListener
 }
 
 ///|
-pub fn TcpStream::connect(
-  addr : @io.SocketAddr,
-) -> TcpStream raise @io.IOError {
+pub fn TcpStream::connect(addr : @io.SocketAddr) -> TcpStream raise @io.IOError {
   { inner: @internal.ITcpStream::connect(addr) }
 }
 
@@ -69,9 +68,8 @@ pub fn TcpListener::accept(self : TcpListener) -> TcpStream raise @io.IOError {
   { inner: self.inner.accept() }
 }
 
-pub fn TcpListener::incoming(
-  self : TcpListener,
-) -> Incoming {
+///|
+pub fn TcpListener::incoming(self : TcpListener) -> Incoming {
   { listener: self }
 }
 
@@ -88,12 +86,13 @@ pub impl @io.Read for TcpStream with read(
   self.inner.read(buf)
 }
 
-pub fn Incoming::iter(
-  self : Incoming,
-) -> Iter[Result[TcpStream, @io.IOError]] {
-  Iter::new(fn(visit : (Result[TcpStream, @io.IOError]) -> IterResult) -> IterResult {
+///|
+pub fn Incoming::iter(self : Incoming) -> Iter[Result[TcpStream, @io.IOError]] {
+  Iter::new(fn(
+    visit : (Result[TcpStream, @io.IOError]) -> IterResult,
+  ) -> IterResult {
     while true {
-      match (try?(self.listener.accept())) {
+      match (try? self.listener.accept()) {
         Ok(client) => {
           guard visit(Ok(client)) is IterContinue else { break IterEnd }
         }
@@ -102,7 +101,7 @@ pub fn Incoming::iter(
           guard visit(Err(err)) is IterContinue else { break IterEnd }
         }
       }
-    }else {
+    } else {
       IterContinue
     }
   })
